@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+
+    <script src="jsencrypt.min.js"></script>
+    <script src="RSA.min.js"></script>
+    <script>
+        // jsencrypt.min.js使用
+        function jsencrypt(pwd,key){
+            var RSA = new JSEncrypt();
+            RSA.setPublicKey(key);
+            return RSA.encrypt(pwd);
+        }
+
+        var p = jsencrypt('66666', 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQComqoAyvbCqO1EGsADwfNTWFQIUbm8CLdeb9TgjGLcz95mAo204SqTYdSEUxFsOnPfROOTxhkhfjbRxBV4/xjS06Y+kkUdiMGFtABIxRQHQIh0LrVvEZQs4NrixxcPI+b1bpE0gO/GAFSNWm9ejhZGj7UnqiHphnSJAVQNz2lgowIDAQAB');
+
+        alert(p)
+
+<!--        // RSA.min.js使用：由BarrettMu.js, BigInt.js, RSA.js三个文件改写-->
+<!--        function getRSA(password, pubkey) {-->
+<!--            setMaxDigits(131);-->
+<!--            var key = new RSAKeyPair("10001", '', pubkey);-->
+<!--            return encryptedString(key, password);-->
+<!--        }-->
+    </script>
+
+</body>
+</html>

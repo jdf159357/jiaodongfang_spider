@@ -1,0 +1,14 @@
+1.fiddler设置
+①Tools→Options→Https→选择from remote clints only
+②Tools→Options→Connections→port:8888  Allow remote computes to connects
+2.模拟器或安卓设备设置
+①设置代理：设置→WLAN→长按WiredSSID→修改网络→显示高级选项→代理选择手动→
+设置代理服务器ip(cmd ipconfig)及端口(同fiddler端口8888)
+②证书安装
+1)查看证书是否安装
+设置→安全→查看授信人凭据→用户  是否有fiddler证书
+2)如果没有安装证书, 安装方式如下：
+打开浏览器输入:ip(代理服务器ip):port(fiddler端口)
+
+xposed:https://repo.xposed.info/module/de.robv.android.xposed.installer
+JustTrustMe:https://github.com/Fuzion24/JustTrustMe/releases/tag/v.2

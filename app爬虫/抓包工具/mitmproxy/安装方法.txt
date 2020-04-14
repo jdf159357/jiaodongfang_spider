@@ -1,0 +1,12 @@
+windows中安装和使用
+1、环境中必须有Microsoft C++ 14.0
+2、pip3 install mitmproxy
+3、mitmdump --version查看版本信息
+4、mitmproxy/mitmweb用来抓包 # 实际不会用到
+5、mitmdump用来和python进行交互
+6、mitmdump运行命令：mitmdump -s decode_douyin_fans.py -p 8888
+7、模拟器设置代理ip及端口号:
+   设置→WLAN→长按WiredSSID→修改网络→显示高级选项→代理选择手动→
+   设置代理服务器ip(cmd ipconfig)及端口(同mitmdump端口8888)
+8、安装证书: 浏览器输入mitm.it
+9、设置代理:mitmdump --mode upstream:https://127.0.0.1:1087/ -s test.py -p 8888（有待测试）

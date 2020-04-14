@@ -1,0 +1,11 @@
+1.rsa加密，首先获取公钥
+2.找到设置公钥的函数
+3.找到加密的函数
+4.遇到未定义变量时可以查找全局(search)，或定义为空
+5.window如果未定义，则看情况定义为this
+
+function getpwd(p, mod, exp) {
+var pubKey = RSA.getPublicKey(mod, exp);
+var encryptedPassword = RSA.encrypt(p, pubKey);
+return encryptedPassword
+}

@@ -1,0 +1,95 @@
+1.安卓SDK两个命令
+
+1）adb 通用命令行工具，可以与模拟器或Android设备进行通信，为各种设备操作提供便利，如安装和调试应用
+①adb服务启动：adb start-server
+* daemon not running; starting now at tcp:5037
+* daemon started successfully
+②adb服务关闭：adb kill-server
+③adb如在安卓模拟器安装和调试应用，模拟器必须为开发者模式并允许USB调试；开发者模式：设置→关于平板电脑→连续点击版本号→返回设置→打开USB调试
+④adb version：查看adb版本，需对应夜神模拟器里的版本，不对应的话应该将安卓内的adb.exe及nox_adb.exe替换到模拟器内
+⑤adb devices：查看连接的安卓设备，如果不显示，需重启模拟器或手动连接adb connect 127.0.0.1:62001
+⑥adb -s 127.0.0.1:62001 shell：进入安卓底层，#号代表root权限（root@android:/ #）
+⑦adb -s 127.0.0.1:62001 install *.apk（文件名）：安装apk包
+⑧adb -s 127.0.0.1:62001 uninstall  包名：卸载程序，获取包名方法
+进入adb shell：adb -s 127.0.0.1:62001 shell
+cd data/app，-数字 前面即为包名com.tal.kaoyan，com.tencent.mm
+root@android:/data/app # ls
+com.tal.kaoyan-2.apk
+com.tencent.mm-1.apk
+⑨查看设备系统包名：adb shell pm list package
+⑩pc端到夜神模拟器：adb push D:\每天文档\账号.txt /sdcard/账号.txt；夜神模拟器到pc端：adb pull /sdcard/server.log D:\每天文档\；屏幕截图：adb shell screencap /sdcard/test.png
+
+2）uiautomatorviewer
+说明：一个图形界面工具来扫描和分析应用的UI控件, 存放在tools目录
+路径：C:\Program Files (x86)\Android\android-sdk\tools
+
+2.Appium
+①inspector
+desired capability：配置Appium会话，告诉Appium服务器想要的自动化平台和程序，具体参数如下：
+{
+  "platformName": "Android",   # 使用的手机操作系统
+  "platformVersion ": "4.4.2",  # 手机操作系统的版本，获取方法：设置→关于平板电脑
+  "deviceName": "127.0.0.1:62001",  # 手机或模拟器类型，可以通过adb devices获取
+  "appPackage": "com.tal.kaoyan",  # 包名
+  "appActivity": ".ui.activity.ucenter.LoginActivity",  # 相当于一个网页，一个安卓应用有多个activity构成，期间可以跳转
+  "noReset": True  # 在当前的session状态下不会重置应用的状态
+}
+appPackage，appActivity获取方法：
+进入adb shell：adb -s 127.0.0.1:62001 shell
+logcat | grep cmp=
+打开应用，查找{cmp=com.tal.kaoyan/.ui.activity.ucenter.LoginActivity (has extras)}，/前面为appPackage，后面为appActivity
+
+inspector具有录制功能，能够生成相关语言代码
+
+
+2.docker常用命令
+docker login   登录docker hub
+
+docker search centos  搜索镜像
+
+docker images  查看镜像
+
+docker pull centos  下载镜像，如果下载慢可以配置加速器，参考网上
+
+docker ps -a  查看所有容器
+docker ps -l  查看正在运行的容器
+容器之前是相互独立的，容器的改变不会影响镜像源
+
+docker run --name centos-while -d centos /bin/bash -c "while true;do sleep 1;done"
+--name:指定容器名称
+-d:后台运行
+-c:执行的命令
+
+docker stop/kill container_id/container_name  停止容器
+
+docker attach container_id  进入容器
+docker exec -it container_id bash  进入容器
+
+docker start container_id  启动容器，而docker run是启动一个新的容器
+
+docker restart container_id  重新启动容器，先停止，后启动
+
+docker pause container_id  暂停容器
+docker unpause container_id  暂停后启动容器
+
+docker rm container_id  删除容器
+docker rmi image_name  删除镜像
+docker rm -v $(docker ps -aq -f status=exited)  批量删除已经退出的容器
+
+
+3.创建appium容器
+https://github.com/appium/appium-docker-android
+①搜索appium镜像：docker search appium
+②下载appium镜像：docker pull appium/appium  大概一个多G，如下载慢，需查找docker加速器
+③进入docker环境：通过ssh工具，连接docker ip地址，默认用户名:docker 密码:tcuser
+④创建容器：docker run --privileged -d -p 4723:4723 --name appium1 appium/appium
+
+
+4.appium容器连接安卓模拟器
+①启动安卓模拟器
+②打开本地cmd, 输入adb devices, 确保设备连接(USB方式连接), 没有连接的话手动连接adb connect 127.0.0.1:62001
+③本地切换连接方式, 改为ip方式连接, adb -s 127.0.0.1:62001 tcpip 5555(任意端口号)
+④输入adb devices, 如果没有显示连接的设备, 需要重新执行②③
+⑤在docker连接安卓模拟器：docker exec -it appium1 adb connect 模拟器ip:5555，查看模拟器ip地址:设置→WLAN→小齿轮
+⑥查看docker的设备：docker exec -it appium1 adb devices
+⑦查看appium日志：docker exec -it appium1 bash, cd /var/log, tail -f appium.log

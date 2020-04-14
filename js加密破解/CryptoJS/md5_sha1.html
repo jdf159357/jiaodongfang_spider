@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+
+    <script src="CryptoJS.min.js"></script>
+    <script>
+
+        // 1.消息摘要算法
+        var wordArray = CryptoJS.enc.Utf8.parse("66666"); // 字符串先转变为wordArray， 也可以不用转变，实际情况根据网站
+        var md5_str = CryptoJS.MD5(wordArray).toString(); // 加上.toString()由对象变成字符串
+        var sha1_str = CryptoJS.SHA1(wordArray).toString();
+
+        // 2.对称加密算法
+        // 2.1AES加密算法
+        var pwd = CryptoJS.enc.Utf8.parse("666666"); // 解析明文
+        var key = CryptoJS.enc.Utf8.parse("abcd1234"); // 解析秘钥
+        var iv = CryptoJS.enc.Utf8.parse("666666"); // 解析偏移向量, CBC模式下用到, ECB模式不用
+
+        var ciphertext = CryptoJS.AES.encrypt(pwd, key, {
+            mode: CryptoJS.mode.CBC,  // 加密模式
+            padding: CryptoJS.pad.Pkcs7,  // 填充方式
+            iv: iv  // 偏移向量
+        }).toString();
+
+        alert(ciphertext)
+        // ciphertext结果为:p0h2lUuOAh4tmEN7FTLq8w==, base64的形式
+
+        // DES, 3DES， RC4对称加密算法同理
+        var ciphertext = CryptoJS.DES.encrypt(message, key, cfg);
+        var plaintext  = CryptoJS.DES.decrypt(ciphertext, key, cfg);
+
+        var ciphertext = CryptoJS.TripleDES.encrypt(message, key, cfg);
+        var plaintext  = CryptoJS.TripleDES.decrypt(ciphertext, key, cfg);
+
+        var ciphertext = CryptoJS.RC4.encrypt(message, key, cfg);
+        var plaintext  = CryptoJS.RC4.decrypt(ciphertext, key, cfg);
+
+
+        // 2.2 AES解密算法, 必须为base64格式才能解密，如果为16进制，需要先转为base64
+        var key = CryptoJS.enc.Utf8.parse("abcd1234"); // 解析秘钥
+        var iv = CryptoJS.enc.Utf8.parse("666666"); // 解析偏移向量, CBC模式下用到, ECB模式不用
+        var ciphertext = CryptoJS.AES.decrypt("p0h2lUuOAh4tmEN7FTLq8w==", key, {
+            mode: CryptoJS.mode.CBC,  // 加密模式
+            padding: CryptoJS.pad.Pkcs7,  // 填充方式
+            iv: iv  // 偏移向量
+        }).toString(CryptoJS.enc.Utf8);
+
+        alert(ciphertext)
+
+
+    </script>
+
+</body>
+</html>
